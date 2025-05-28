@@ -1,0 +1,53 @@
+default:
+  app:
+    enabled: true
+    enableDelete: true
+    enableAutoSync: true
+    autoSyncPrune: true
+    project: policy-project
+    destination:
+      namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+    source:
+      targetRevision: main
+
+applications:
+
+  acm-operator:
+    annotations:
+      argocd.argoproj.io/sync-wave: "-1"
+    destination:
+      namespace: open-cluster-management
+    source:
+      repoURL: https://github.com/mervani/acm-policies.git
+      path: products/acm/operator
+    syncPolicyRetry:
+      limit: 10
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 10m
+
+  acm-placements:
+    destination:
+      namespace: acm-policies
+    source:
+      repoURL: https://github.com/mervani/acm-policies.git
+      path: products/acm/acm-placements
+    syncPolicyRetry:
+      limit: 10
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 10m
+        syncOptions:
+    syncOptions:
+    - CreateNamespace=true
+
+  argocd-policy:
+    destination:
+      namespace: acm-policies
+    source:
+      repoURL: https://github.com/mervani/acm-policies.git
+      path: policies/gitops
+

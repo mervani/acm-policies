@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:  
+  name: default
+  labels:
+    argocd.argoproj.io/project-inherit: global
+spec:
+  namespaceResourceBlacklist:
+    - group: '*'
+      kind: '*'
+  destinations:
+    - namespace: '!kube-*'
+      server: 'https://kubernetes.default.svc'
+    - namespace: '!openshift-*'
+      server: 'https://kubernetes.default.svc'
+  sourceRepos:
+    - 'https://github.com/mervani/acm-policies.git'

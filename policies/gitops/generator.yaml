@@ -1,0 +1,94 @@
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PolicyGenerator
+metadata:
+ name: policy-generator-gitops
+policyDefaults:
+ namespace: acm-policies
+ remediationAction: enforce
+ consolidateManifests: false
+ complianceType: mustonlyhave
+ metadataComplianceType: musthave
+ policySets:
+  - gitops-managed-clusters
+placementBindingDefaults:
+ name: "gitops-binding"
+
+policies:
+- name: gitops-acm-hub-operator
+  remediationAction: enforce
+  policySets:
+  - gitops-acm-hub
+  manifests:
+   - path: subscription/overlays/hub
+
+- name: gitops-mc-operator
+  remediationAction: enforce
+  manifests:
+   - path: subscription/overlays/mc
+
+- name: gitops-mc-instances
+  remediationAction: enforce
+  namespaceSelector:
+   matchLabels:
+    product.kind: argocd
+  dependencies:
+  - name: "gitops-mc-operator"
+    compliance: "Compliant"
+  manifests:
+   - path: instance/overlays/default
+
+- name: gitops-acm-hub-instances
+  remediationAction: enforce
+  namespaceSelector:
+   matchLabels:
+    product.kind: argocd
+  dependencies:
+  - name: "gitops-acm-hub-operator"
+    compliance: "Compliant"
+  policySets:
+   - gitops-acm-hub
+  manifests:
+   - path: instance/overlays/hub
+
+- name: gitops-mc-bootstrap
+  remediationAction: enforce
+  namespaceSelector:
+   matchLabels:
+    product.kind: argocd
+  dependencies:
+  - name: "gitops-mc-operator"
+    compliance: "Compliant"
+  manifests:
+   - path: bootstrap/overlays/mc
+   - path: bootstrap/overlays/mc/team-onboarding.yaml
+    
+- name: gitops-acm-hub-bootstrap
+  remediationAction: enforce
+  namespaceSelector:
+   matchLabels:
+    product.kind: argocd
+  policySets:
+   - gitops-acm-hub
+  dependencies:
+  - name: "gitops-acm-hub-operator"
+    compliance: "Compliant"
+  manifests:
+   - path: bootstrap/overlays/hub
+
+- name: gitops-instances-status
+  remediationAction: inform
+  policySets:
+   - gitops-managed-clusters
+   - gitops-acm-hub
+  manifests:
+  - path: health/argocd-status.yaml
+
+policySets:
+- name: gitops-managed-clusters
+  placement:
+   placementName: "managed-clusters-placement"
+  
+- name: gitops-acm-hub
+  placement:  
+   placementName: "hub-placement" 

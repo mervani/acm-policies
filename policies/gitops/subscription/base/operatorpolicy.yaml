@@ -1,0 +1,20 @@
+apiVersion: policy.open-cluster-management.io/v1beta1
+kind: OperatorPolicy
+metadata:
+  name: openshift-gitops-operator
+spec:
+  complianceType: musthave
+  remediationAction: enforce
+  severity: medium
+  subscription:
+    name: openshift-gitops-operator
+    startingCSV: openshift-gitops-operator.v1.15.1
+    config:
+        env:
+        - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
+          value: openshift-gitops,gitops
+        - name: CONTROLLER_CLUSTER_ROLE
+          value: gitops-controller
+  upgradeApproval: Automatic
+  versions:
+    - openshift-gitops-operator.v1.15.1

@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: tenants-onboarding
+  namespace: openshift-gitops
+spec:
+  clusterResourceWhitelist:
+  - group: ''
+    kind: 'Namespace'
+  description: Project for bootstrap cluster app
+  destinations:
+  - namespace: '*'
+    server: https://kubernetes.default.svc
+  sourceRepos:
+  - https://github.com/mervani/ocp-tenants.git
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: onboarding-tenants
+  namespace: openshift-gitops
+spec:
+  goTemplate: true
+  generators:
+    - git:
+        directories:
+          - path: 'tenants/*/clusters/{{hub .ManagedClusterName hub}}'
+          - path: 'tenants/*/clusters/all'
+        repoURL: 'https://github.com/mervani/ocp-tenants.git'
+        revision: master
+  template:
+    metadata:
+      name: '{{`{{ index .path.segments 1 | normalize }}-{{ .path.basename }}`}}'
+    spec:
+      info:
+        - name: Description
+          value: Onboarding team to the cluster
+      destination:
+        server: https://kubernetes.default.svc
+      project: tenants-onboarding
+      source:
+        path: '{{`{{.path.path}}`}}'
+        repoURL: 'https://github.com/mervani/ocp-tenants.git'
+        targetRevision: master
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+          allowEmpty: true
+

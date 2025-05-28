@@ -16,6 +16,7 @@ placementBindingDefaults:
 
 policies:
 - name: gitops-acm-hub-operator
+  complianceType: musthave
   remediationAction: enforce
   policySets:
   - gitops-acm-hub
@@ -24,6 +25,7 @@ policies:
 
 - name: gitops-mc-operator
   remediationAction: enforce
+  complianceType: musthave
   manifests:
    - path: subscription/overlays/mc
 

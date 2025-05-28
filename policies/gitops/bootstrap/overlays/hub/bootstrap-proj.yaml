@@ -7,7 +7,7 @@ spec:
   - group: '*'
     kind: '*'
   destinations:
-  - namespace: 'acm-policies'
+  - namespace: '*'
     server: 'https://kubernetes.default.svc'
   sourceRepos:
   - 'https://github.com/mervani/acm-policies.git'

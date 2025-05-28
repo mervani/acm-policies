@@ -4,7 +4,7 @@ default:
     enableDelete: true
     enableAutoSync: true
     autoSyncPrune: true
-    project: policy-project
+    project: bootstrap
     destination:
       namespace: openshift-gitops
       server: https://kubernetes.default.svc

@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: acm-bootstrap-app
+  namespace: openshift-gitops
+spec:
+  project: bootstrap
+  destination:
+    namespace: openshift-gitops
+    server: https://kubernetes.default.svc
+  source:
+    path: bootstrap/overlays/hub
+    repoURL: https://github.com/mervani/acm-policies.git
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+  ignoreDifferences:
+    - group: argoproj.io
+      kind: Application
+      managedFieldsManagers:
+        - argocd-server
+      jsonPointers:
+        - /spec/syncPolicy/automated

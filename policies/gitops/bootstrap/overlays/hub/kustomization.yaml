@@ -3,4 +3,5 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - policy-appproj.yaml
+  - bootstrap-proj.yaml
+  - bootstrap-app.yaml

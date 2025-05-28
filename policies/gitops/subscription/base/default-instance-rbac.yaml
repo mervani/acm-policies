@@ -2,7 +2,7 @@
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: openshift-gitops-policy-admin
+  name: openshift-gitops-admin
 subjects:
   - kind: ServiceAccount
     name: openshift-gitops-argocd-application-controller

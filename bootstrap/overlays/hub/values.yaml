@@ -10,6 +10,12 @@ default:
       server: https://kubernetes.default.svc
     source:
       targetRevision: main
+    syncPolicyRetry:
+      limit: 10
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 10m
 
 applications:
 
@@ -21,12 +27,6 @@ applications:
     source:
       repoURL: https://github.com/mervani/acm-policies.git
       path: products/acm/operator
-    syncPolicyRetry:
-      limit: 10
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 10m
 
   acm-placements:
     destination:
@@ -34,13 +34,6 @@ applications:
     source:
       repoURL: https://github.com/mervani/acm-policies.git
       path: products/acm/acm-placements
-    syncPolicyRetry:
-      limit: 10
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 10m
-        syncOptions:
     syncOptions:
     - CreateNamespace=true
 

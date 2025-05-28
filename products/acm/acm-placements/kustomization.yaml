@@ -3,4 +3,6 @@ kind: Kustomization
 
 resources:
   - ns.yaml
+  - mcsb.yaml
   - hub-placement.yaml
+  - mc-placement.yaml

@@ -8,7 +8,7 @@ spec:
   severity: medium
   subscription:
     name: openshift-gitops-operator
-    startingCSV: openshift-gitops-operator.v1.16.0-0.1746014725.p
+    startingCSV: openshift-gitops-operator.v1.16.1
     config:
         env:
         - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES

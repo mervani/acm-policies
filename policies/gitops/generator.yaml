@@ -63,7 +63,6 @@ policies:
     compliance: "Compliant"
   manifests:
    - path: bootstrap/overlays/mc
-   - path: bootstrap/overlays/mc/team-onboarding.yaml
     
 - name: gitops-acm-hub-bootstrap
   remediationAction: enforce

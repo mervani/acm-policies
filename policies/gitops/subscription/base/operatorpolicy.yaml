@@ -18,3 +18,4 @@ spec:
   upgradeApproval: Automatic
   versions:
     - openshift-gitops-operator.v1.16.0-0.1746014725.p
+    - openshift-gitops-operator.v1.16.1

@@ -27,7 +27,7 @@ spec:
           - path: 'tenants/*/clusters/{{hub .ManagedClusterName hub}}'
           - path: 'tenants/*/clusters/all'
         repoURL: 'https://github.com/mervani/ocp-tenants.git'
-        revision: master
+        revision: maing
   template:
     metadata:
       name: '{{`{{ index .path.segments 1 | normalize }}-{{ .path.basename }}`}}'
@@ -41,7 +41,7 @@ spec:
       source:
         path: '{{`{{.path.path}}`}}'
         repoURL: 'https://github.com/mervani/ocp-tenants.git'
-        targetRevision: master
+        targetRevision: main
       syncPolicy:
         automated:
           selfHeal: true

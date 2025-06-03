@@ -1,0 +1,35 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: PolicyGenerator
+metadata:
+  name: azure-eso-policy-generator
+placementBindingDefaults:
+  name: eso-binding
+policyDefaults:
+  namespace: acm-policies
+  remediationAction: enforce
+  consolidateManifests: false
+  generatePlacementWhenInSet: false
+  policySets:
+  - eso-policies
+policies:
+  - name: policy-eso-operator
+    manifests:
+      - path: operator/base
+  - name: policy-eso-instance
+    configurationPolicyAnnotations: {"policy.open-cluster-management.io/disable-templates": "true"}
+    manifests:
+      - path: instance/base
+  - name: policy-azure-kv-secret-preprocess
+    manifests:
+      - path: secret-policy/base/azure-secret-preprocess.yaml
+    policySets: []
+    placement:
+      placementName: hub-placement
+  - name: policy-azure-kv-secret-populate
+    manifests:
+      - path: secret-policy/base/azure-secret-policy.yaml
+policySets:
+  - name: "eso-policies"
+    description: "Policy for processing eso secrets"
+    placement:
+       placementName: all-clusters-placement

@@ -44,3 +44,10 @@ applications:
       repoURL: https://github.com/mervani/acm-policies.git
       path: policies/gitops
 
+  eso-policy:
+    destination:
+      namespace: acm-policies
+    source:
+      repoURL: https://github.com/mervani/acm-policies.git
+      path: policies/eso
+

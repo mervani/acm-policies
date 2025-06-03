@@ -6,3 +6,4 @@ resources:
   - mcsb.yaml
   - hub-placement.yaml
   - mc-placement.yaml
+  - all-placement.yaml

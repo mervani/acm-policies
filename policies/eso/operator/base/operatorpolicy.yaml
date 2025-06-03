@@ -1,0 +1,19 @@
+apiVersion: policy.open-cluster-management.io/v1beta1
+kind: OperatorPolicy
+metadata:
+  name: external-secrets-operator
+spec:
+  complianceType: musthave
+  remediationAction: enforce
+  severity: medium
+  upgradeApproval: Automatic
+  operatorGroup:
+    name: eso-operator
+    namespace: external-secrets-operator
+    targetNamespaces:
+      - external-secrets-operator
+  subscription:
+    channel: stable
+    name: external-secrets-operator
+    namespace: external-secrets-operator
+    source: community-operators

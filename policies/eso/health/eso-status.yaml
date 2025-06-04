@@ -1,0 +1,55 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: ConfigurationPolicy
+metadata:
+  name: eso-instance-status
+spec:
+  remediationAction: informonly
+  severity: high
+  object-templates-raw: |
+    ## Get the ESO config instances we are checking health for
+    {{- range $eso := (lookup "operator.external-secrets.io/v1alpha1" "OperatorConfig" "external-secrets-operator" "").items }}
+      ## list all of the lookups for ESO deployments
+      {{- $selectors := list "app.kubernetes.io/name=external-secrets"
+                            "app.kubernetes.io/name=external-secrets-cert-controller"
+                            "app.kubernetes.io/name=external-secrets-webhook"
+      }}
+
+      ## ensure ESO config is reporting healthy
+    - complianceType: musthave
+      objectDefinition:
+        apiVersion: operator.external-secrets.io/v1alpha1
+        kind: OperatorConfig
+        metadata:
+          namespace: {{ $eso.metadata.namespace }}
+        status:
+          conditions:
+            - status: 'True'
+              type: Initialized
+            - status: 'True'
+              type: Deployed
+
+      ## ensure all deployments are healthy in ESO Operator config instance
+      {{- range $sel := $selectors }}
+        {{- $dep := (lookup "apps/v1" "Deployment" $eso.metadata.namespace "" $sel).items }}
+    - complianceType: musthave
+      objectDefinition:
+        kind: Deployment
+        apiVersion: apps/v1
+        metadata:
+          namespace: {{ $eso.metadata.namespace }}
+          labels:
+            {{ $sel | replace "=" ": " }}
+        status:
+        {{- if gt (len $dep) 0 }}
+          {{- $dp := (index $dep 0) }}
+          replicas: {{ $dp.spec.replicas }}
+          updatedReplicas: {{ $dp.spec.replicas }}
+          readyReplicas: {{ $dp.spec.replicas }}
+          availableReplicas: {{ $dp.spec.replicas }}
+          conditions:
+            - type: Available
+              status: 'True'
+        {{- end }}
+      {{- end }}
+
+    {{- end }}

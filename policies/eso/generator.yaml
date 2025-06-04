@@ -19,6 +19,10 @@ policies:
     configurationPolicyAnnotations: {"policy.open-cluster-management.io/disable-templates": "true"}
     manifests:
       - path: instance/base
+  - name: policy-eso-instance-status
+    remediationAction: informonly
+    manifests:
+      - path: health/eso-status.yaml
   - name: policy-azure-kv-secret-preprocess
     manifests:
       - path: secret-policy/base/azure-secret-preprocess.yaml

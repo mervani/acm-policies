@@ -93,7 +93,6 @@ spec:
       p, pipeline, applications, sync, */*,allow
       p, pipeline, projects, get, *, allow
       g, system:cluster-admins, role:admin
-      g, kaizen, role:admin
     scopes: '[groups]'
   extraConfig:
     accounts.pipeline: apiKey
